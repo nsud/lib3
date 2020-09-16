@@ -1,0 +1,17 @@
+{% extends 'index.html' %}
+{% block title %}Выход из библиотеки{% endblock %}
+{% block title_h2 %}Выход из библиотеки{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between">
+
+	<p class="h4 text-secondary my-3">Вы уверены, что хотите выйти из библиотеки?</p>
+	<form method="post" action="{% url 'account_logout' %}">
+	  {% csrf_token %}
+	  {% if redirect_field_value %}
+	  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+	  {% endif %}
+	  <input class="btn btn-outline-info my-3" type="submit" value="Выйти">
+	  <a class="btn btn-outline-success my-3" href="{%url 'p_library:book_list'%}">Вернуться</a>
+	</form>
+	</div>
+{% endblock %}

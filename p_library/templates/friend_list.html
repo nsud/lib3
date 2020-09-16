@@ -1,0 +1,42 @@
+{% extends 'index.html' %}
+{% block title %}Моя библиотека{% endblock %}
+{% block link %}
+
+    <div class="d-flex justify-content-between align-items-center bg-light">
+        <div class="mx-2 my-2 h5 font-weight-bold">Привет,
+            {% if github_url %}
+            <a class="text-primary" href="{{ github_url }}">{{ user }}</a>!
+            {% elif user.is_superuser %}
+            <a class="text-primary" href="/admin/">{{ user }}</a>!
+            {% else %}
+            <span class="text-primary">{{ user }}</span>!
+            {% endif %}
+            <a class="text-secondary" href="{%url 'p_library:user_edit'%}"><img src="/media/icon/settings.ico" alt=""></a>
+        </div>
+        <a class="btn btn-outline-primary mx-2 my-2" href="{%url 'p_library:logout'%}">Выход</a>
+    </div>
+                <div class="text-secondary text-center font-weight-bold my-5">
+                    <a class="text-secondary text-decoration-none" href="{%url 'p_library:library'%}">Библиотека</a> |
+                    <a class="text-secondary text-decoration-none" href="{%url 'p_library:book_list'%}">Книги</a> |
+                    <a class="text-secondary text-decoration-none" href="{%url 'p_library:author_list'%}">Авторы</a> |
+                    <a class="text-secondary text-decoration-none" href="{%url 'p_library:publisher_list'%}">Издательства</a>
+                </div>
+{% endblock %}
+
+{% block title_h2 %}Список друзей:{% endblock %}
+
+{% block content %}
+
+                <table class="table table-stripped table-hover">
+                    {% for friend in object_list %}
+                    <tr class="table-bordered">
+                        <td style="width:20px;">{{ forloop.counter }}</td>
+                        <td>{{ friend.full_name }}</td>
+                        <td style="width:20px;text-align:right;">
+                            <a class="btn btn-outline-primary" href="{%url 'p_library:friend_update' friend.id %}">Изменить</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                <a class="btn btn-success my-3" href="{%url 'p_library:friend_create'%}">Добавить друга</a>
+{% endblock %}
