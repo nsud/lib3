@@ -118,99 +118,6 @@ class FriendList(ListView):
     model = Friend
     template_name = 'friend_list.html'
 
-'''
-def index(request):
-    template = loader.get_template('index.html')
-    books = Book.objects.all()
-    friends = Friend.objects.all()
-    biblio_data = {
-        "title": "мою библиотеку",
-        "books": books,
-        "friends": friends,
-    }
-    return HttpResponse(template.render(biblio_data, request))
-
-
-def book_increment(request):
-    if request.method == 'POST':
-        book_id = request.POST['id']
-        if not book_id:
-            return redirect('/index/')
-        else:
-            book = Book.objects.filter(id=book_id).first()
-            if not book:
-                return redirect('/index/')
-            book.copy_count += 1
-            book.save()
-        return redirect('/index/')
-    else:
-        return redirect('/index/')
-
-
-def book_decrement(request):
-    if request.method == 'POST':
-        book_id = request.POST['id']
-        if not book_id:
-            return redirect('/index/')
-        else:
-            book = Book.objects.filter(id=book_id).first()
-            if not book:
-                return redirect('/index/')
-            if book.copy_count < 1:
-                book.copy_count = 0
-            else:
-                book.copy_count -= 1
-            book.save()
-        return redirect('/index/')
-    else:
-        return redirect('/index/')
-
-
-def borrowed_book(request):
-    if request.method == 'POST':
-        book_id = request.POST['id']
-        friend_id = request.POST['select_borrowed']
-        if not book_id:
-            return redirect('/index/')
-        else:
-            book = Book.objects.filter(id=book_id).first()
-            friend = Friend.objects.get(id=friend_id)
-            if not book:
-                return redirect('/index/')
-            if book.copy_count < 1:
-                book.copy_count = 0
-            else:
-                book.copy_count -= 1
-                book.borrowed_book_count += 1
-                book.friend.add(friend)
-            book.save()
-        return redirect('/index/')
-    else:
-        return redirect('/index/')
-
-
-def returned_book(request):
-    if request.method == 'POST':
-        book_id = request.POST['id']
-        friend_id = request.POST['select_returned']
-        if not book_id:
-            return redirect('/index/')
-        else:
-            book = Book.objects.filter(id=book_id).first()
-            friend = Friend.objects.get(id=friend_id)
-            if not book:
-                return redirect('/index/')
-            if book.borrowed_book_count < 1:
-                book.borrowed_book_count = 0
-            else:
-                book.copy_count += 1
-                book.borrowed_book_count -= 1
-                book.friend.remove(friend)
-            book.save()
-        return redirect('/index/')
-    else:
-        return redirect('/index/')'''
-
 
 def log_in(request, template, context):
     if request.method == 'POST':
@@ -329,7 +236,7 @@ def book_increment(request):
             book = Book.objects.filter(id=book_id).first()
             if not book:
                 return redirect('/library/')
-            book.copy_count += 1
+            book.copy_count = int(book.copy_count) + 1
             book.save()
         return redirect('/library/')
     else:
@@ -344,10 +251,10 @@ def book_decrement(request):
             book = Book.objects.filter(id=book_id).first()
             if not book:
                 return redirect('/library/')
-            if book.copy_count < 1:
+            if int(book.copy_count) < 1:
                 book.copy_count = 0
             else:
-                book.copy_count -= 1
+                book.copy_count = int(book.copy_count) - 1
             book.save()
         return redirect('/library/')
     else:
@@ -364,11 +271,11 @@ def borrowed_book(request):
             friend = Friend.objects.get(id=friend_id)
             if not book:
                 return redirect('/library/')
-            if book.copy_count < 1:
+            if int(book.copy_count) < 1:
                 book.copy_count = 0
             else:
-                book.copy_count -= 1
-                book.borrowed_book_count += 1
+                book.copy_count = int(book.copy_count) - 1
+                book.borrowed_book_count = int(book.copy_count) + 1
                 book.friend.add(friend)
             book.save()
         return redirect('/library/')
@@ -386,11 +293,11 @@ def returned_book(request):
             friend = Friend.objects.get(id=friend_id)
             if not book:
                 return redirect('/library/')
-            if book.borrowed_book_count < 1:
+            if int(book.borrowed_book_count) < 1:
                 book.borrowed_book_count = 0
             else:
-                book.copy_count += 1
-                book.borrowed_book_count -= 1
+                book.copy_count = int(book.borrowed_book_count) + 1
+                book.borrowed_book_count = int(book.borrowed_book_count) - 1
                 book.friend.remove(friend)
             book.save()
         return redirect('/library/')
